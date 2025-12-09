@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.threatlens">
+
+    <!-- PERMISSIONS -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- Bluetooth -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+    <!-- Android 12+ Bluetooth -->
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
+    <!-- Camera -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" android:required="true" />
+    <uses-feature android:name="android.hardware.camera.ar" android:required="false" />
+
+    <!-- Biometrics -->
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+
+
+    <!-- ARCore -->
+    <meta-data
+        android:name="com.google.ar.core"
+        android:value="optional" />
+
+    <!-- ============================================================= -->
+    <!-- 👇 ONLY ONE <application> TAG — FIXED COMPLETELY             -->
+    <!-- ============================================================= -->
+    <application
+        android:allowBackup="true"
+        android:label="ThreatLens"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.ThreatLens"
+        android:extractNativeLibs="true">
+
+        <!-- Launcher Activity -->
+        <activity
+            android:name=".ui.SplashActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- LOGIN SCREEN -->
+        <activity
+            android:name=".ui.LoginActivity"
+            android:exported="false" />
+
+        <!-- MAIN DASHBOARD SCREEN -->
+        <activity
+            android:name=".UserInterface.MainActivity"
+            android:exported="false" />
+
+        <!-- PROFILE SCREEN -->
+        <activity
+            android:name=".UserInterface.ProfileActivity"
+            android:exported="false" />
+
+        <!-- CAMERA / SCANNER -->
+        <activity
+            android:name=".UserInterface.CameraViewActivity"
+            android:exported="false" />
+
+        <!-- AR HIDDEN CAMERA -->
+        <activity
+            android:name=".ui.ArHiddenCameraActivity"
+            android:exported="false" />
+
+    </application>
+
+</manifest>
