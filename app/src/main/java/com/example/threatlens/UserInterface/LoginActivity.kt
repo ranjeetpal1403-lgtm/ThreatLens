@@ -7,29 +7,36 @@ import androidx.fragment.app.FragmentActivity
 import androidx.activity.compose.setContent
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
-
 import androidx.compose.animation.*
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.threatlens.R
 import com.example.threatlens.UserInterface.MainActivity
 
-// --------------------------------------------------------------
-// LOGIN ACTIVITY WITH BIOMETRIC AUTH
-// --------------------------------------------------------------
 class LoginActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +45,7 @@ class LoginActivity : FragmentActivity() {
         setContent {
             PremiumLoginScreen(
                 onLogin = { email, password ->
-                    if (email == "admin@gmail.com" && password == "admin123") {
+                    if (email == "suhani@gmail.com" && password == "suhani123") {
 
                         Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
 
@@ -51,15 +58,11 @@ class LoginActivity : FragmentActivity() {
                     }
                 },
 
-                // 🔥 BIOMETRIC BUTTON ACTION
                 onBiometricClick = { showBiometricPrompt() }
             )
         }
     }
 
-    // --------------------------------------------------------------
-    // BIOMETRIC AUTH FUNCTION
-    // --------------------------------------------------------------
     private fun showBiometricPrompt() {
 
         val executor = ContextCompat.getMainExecutor(this)
@@ -101,9 +104,6 @@ class LoginActivity : FragmentActivity() {
     }
 }
 
-// --------------------------------------------------------------
-// COMPOSABLE LOGIN SCREEN
-// --------------------------------------------------------------
 @Composable
 fun PremiumLoginScreen(
     onLogin: (String, String) -> Unit,
@@ -115,9 +115,23 @@ fun PremiumLoginScreen(
 
     val gradient = Brush.verticalGradient(
         colors = listOf(
-            Color(0xFF1A237E),
-            Color(0xFF3949AB),
-            Color(0xFF5C6BC0)
+            Color(0xFF0A0F24),
+            Color(0xFF121B3D),
+            Color(0xFF3D5AFE)
+        )
+    )
+
+    val neonCyan = Color(0xFF00E5FF)
+    val neonGreen = Color(0xFF76FF03)
+
+    // rememberInfiniteTransition is imported above
+    val transition = rememberInfiniteTransition()
+    val glowAlpha by transition.animateFloat(
+        initialValue = 0.20f,
+        targetValue = 0.60f,
+        animationSpec = infiniteRepeatable(
+            tween(1600, easing = LinearEasing),
+            RepeatMode.Reverse
         )
     )
 
@@ -126,7 +140,7 @@ fun PremiumLoginScreen(
             .fillMaxSize()
             .background(gradient)
             .padding(horizontal = 20.dp),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.TopCenter
     ) {
 
         Column(
@@ -134,33 +148,75 @@ fun PremiumLoginScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
 
-            Text(
-                text = "ThreatLens",
-                fontSize = 34.sp,
-                fontWeight = FontWeight.ExtraBold,
-                color = Color.White,
-                modifier = Modifier.padding(bottom = 4.dp)
-            )
+            Spacer(modifier = Modifier.height(40.dp))
+
+            // ⭐ SMALLER LOGO WITH GLOW ⭐
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.size(150.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(130.dp)
+                        .background(
+                            brush = Brush.radialGradient(
+                                colors = listOf(
+                                    Color.Transparent,
+                                    neonCyan.copy(alpha = glowAlpha * 0.6f),
+                                    neonGreen.copy(alpha = glowAlpha * 0.25f)
+                                )
+                            ),
+                            shape = CircleShape
+                        )
+                )
+
+                Image(
+                    painter = painterResource(id = R.drawable.threatlens_logo),
+                    contentDescription = "ThreatLens Logo",
+                    modifier = Modifier
+                        .size(105.dp)
+                        .shadow(10.dp, CircleShape)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(6.dp))
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = "Threat",
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = "Lens",
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = neonCyan
+                )
+            }
 
             Text(
-                text = "An AR Based Detection App",
-                fontSize = 16.sp,
-                color = Color.White.copy(alpha = 0.8f),
-                modifier = Modifier.padding(bottom = 24.dp)
+                text = "An AR Based Threat Detection App",
+                fontSize = 14.sp,
+                color = Color.White.copy(alpha = 0.80f),
+                modifier = Modifier.padding(bottom = 16.dp)
             )
 
+            // ⭐ CENTERED CARD ⭐
             AnimatedVisibility(
                 visible = true,
-                enter = fadeIn(tween(1000)) + slideInVertically(initialOffsetY = { 60 }),
+                enter = fadeIn(tween(900)) + slideInVertically(initialOffsetY = { 40 }),
             ) {
 
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(10.dp),
-                    shape = RoundedCornerShape(24.dp),
+                    shape = RoundedCornerShape(22.dp),
                     colors = CardDefaults.cardColors(containerColor = Color.White),
-                    elevation = CardDefaults.cardElevation(12.dp)
+                    elevation = CardDefaults.cardElevation(10.dp)
                 ) {
 
                     Column(
@@ -170,14 +226,14 @@ fun PremiumLoginScreen(
 
                         Text(
                             text = "Welcome Back",
-                            fontSize = 28.sp,
+                            fontSize = 26.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = Color(0xFF1A237E)
                         )
 
                         Text(
                             text = "Login to continue",
-                            fontSize = 15.sp,
+                            fontSize = 14.sp,
                             color = Color.Gray,
                             modifier = Modifier.padding(bottom = 20.dp)
                         )
@@ -187,8 +243,8 @@ fun PremiumLoginScreen(
                             onValueChange = { email = it },
                             label = { Text("Email") },
                             modifier = Modifier.fillMaxWidth(),
-                            singleLine = true,
                             shape = RoundedCornerShape(12.dp),
+                            singleLine = true,
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                         )
 
@@ -199,8 +255,8 @@ fun PremiumLoginScreen(
                             onValueChange = { password = it },
                             label = { Text("Password") },
                             modifier = Modifier.fillMaxWidth(),
-                            singleLine = true,
                             shape = RoundedCornerShape(12.dp),
+                            singleLine = true,
                             visualTransformation = PasswordVisualTransformation(),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                         )
@@ -211,7 +267,7 @@ fun PremiumLoginScreen(
                             onClick = { onLogin(email, password) },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(55.dp),
+                                .height(50.dp),
                             shape = RoundedCornerShape(14.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color(0xFF1A237E)
@@ -219,7 +275,7 @@ fun PremiumLoginScreen(
                         ) {
                             Text(
                                 text = "LOGIN",
-                                fontSize = 18.sp,
+                                fontSize = 17.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White
                             )
@@ -227,12 +283,11 @@ fun PremiumLoginScreen(
 
                         Spacer(modifier = Modifier.height(12.dp))
 
-                        // 🔥 BIOMETRIC BUTTON
                         Button(
                             onClick = { onBiometricClick() },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(55.dp),
+                                .height(50.dp),
                             shape = RoundedCornerShape(14.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color(0xFF3949AB)
@@ -240,7 +295,7 @@ fun PremiumLoginScreen(
                         ) {
                             Text(
                                 text = "Login with Fingerprint",
-                                fontSize = 16.sp,
+                                fontSize = 15.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White
                             )
